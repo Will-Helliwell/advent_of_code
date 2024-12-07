@@ -1,10 +1,13 @@
-calculateListDifference();
+const path = require("path");
+const inputFilePath = path.join(__dirname, 'input.txt');
 
-function calculateListDifference() {
-  const fs = require("fs"); // Import the File System module
+calculateListDifference(inputFilePath);
+
+function calculateListDifference(inputFilePath) {
+  const fs = require("fs");
 
   // Read the file content
-  fs.readFile("input.txt", "utf8", (err, data) => {
+  fs.readFile(inputFilePath, "utf8", (err, data) => {
     if (err) {
       console.error("Error reading the file:", err);
       return;
