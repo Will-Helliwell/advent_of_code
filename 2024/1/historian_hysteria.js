@@ -1,17 +1,16 @@
+const fs = require("fs/promises");
 const path = require("path");
-const inputFilePath = path.join(__dirname, "input.txt");
+const inputFilePath = path.join(__dirname, "small_input.txt");
 
-calculateListDifference(inputFilePath);
+(async () => {
+  const difference = await calculateListDifference(inputFilePath);
+  console.log(difference);
+})();
 
-function calculateListDifference(inputFilePath) {
-  const fs = require("fs");
-
+async function calculateListDifference(inputFilePath) {
   // Read the file content
-  fs.readFile(inputFilePath, "utf8", (err, data) => {
-    if (err) {
-      console.error("Error reading the file:", err);
-      return;
-    }
+  try {
+    const data = await fs.readFile(inputFilePath, "utf8");
 
     // Convert each column into an array of numbers
     const leftColumn = [];
@@ -26,7 +25,22 @@ function calculateListDifference(inputFilePath) {
         rightColumn.push(Number(right)); // Add right number to the right column
       });
 
-    console.log("Left Column:", leftColumn);
-    console.log("Right Column:", rightColumn);
-  });
+    // sort smallest to largest
+    leftColumn.sort((a, b) => a - b);
+    rightColumn.sort((a, b) => a - b);
+
+    // calculate the difference
+    let distanceTotal = 0;
+    const leftColumnLength = leftColumn.length;
+    for (let index = 0; index < leftColumnLength; index++) {
+      const leftNumber = leftColumn[index];
+      const rightNumber = rightColumn[index];
+      const distanceIndividual = Math.abs(leftNumber - rightNumber);
+      distanceTotal += distanceIndividual;
+    }
+
+    return distanceTotal;
+  } catch (err) {
+    console.error("Error reading the file:", err);
+  }
 }
